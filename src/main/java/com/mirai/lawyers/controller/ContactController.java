@@ -3,6 +3,8 @@ package com.mirai.lawyers.controller;
 import com.mirai.lawyers.dto.ContactRequest;
 import com.mirai.lawyers.model.Contact;
 import com.mirai.lawyers.repository.ContactRepository;
+import com.mirai.lawyers.services.WebhookService;
+
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,10 +13,12 @@ import java.util.List;
 @RequestMapping("/api/contact")
 public class ContactController {
 
-    private final ContactRepository contactRepository;
+  private final ContactRepository contactRepository;
+    private final WebhookService webhookService;
 
-    public ContactController(ContactRepository contactRepository) {
+    public ContactController(ContactRepository contactRepository, WebhookService webhookService) {
         this.contactRepository = contactRepository;
+        this.webhookService = webhookService;
     }
 
     @PostMapping
@@ -25,7 +29,14 @@ public class ContactController {
         contact.setPhone(request.getPhone());
         contact.setMessage(request.getMessage());
         contact.setService(request.getService());
-        return contactRepository.save(contact);
+        
+        // Guardar en BD
+        Contact savedContact = contactRepository.save(contact);
+        
+        // Enviar webhook a Apps Script
+        webhookService.sendToAppsScript(savedContact);
+        
+        return savedContact;
     }
 
     @GetMapping
