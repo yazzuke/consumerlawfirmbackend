@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class WebhookService {
@@ -20,6 +21,10 @@ public class WebhookService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
+            // Formatear fecha más legible
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            String formattedDate = contact.getCreatedAt().format(formatter);
+
             // Crear el payload para Apps Script
             WebhookPayload payload = new WebhookPayload();
             payload.setName(contact.getName());
@@ -27,7 +32,7 @@ public class WebhookService {
             payload.setPhone(contact.getPhone());
             payload.setService(contact.getService());
             payload.setMessage(contact.getMessage());
-            payload.setCreatedAt(contact.getCreatedAt().toString());
+            payload.setCreatedAt(formattedDate); // Fecha formateada
 
             HttpEntity<WebhookPayload> request = new HttpEntity<>(payload, headers);
             
