@@ -13,7 +13,7 @@ public class WebhookService {
     private final RestTemplate restTemplate = new RestTemplate();
     
     // URL de tu Google Apps Script Web App
-    private final String APPS_SCRIPT_URL = "https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec";
+    private final String APPS_SCRIPT_URL = "https://script.google.com/a/macros/consumerlawfirmgroup.com/s/AKfycbxQ1R4pcl7da5ddmN1b4o4QjHo-N9U9AQL2Q-BYPZ0SoRuwaHv8xPbRVVmNl6sm9IprOw/exec";
 
     public void sendToAppsScript(Contact contact) {
         try {
